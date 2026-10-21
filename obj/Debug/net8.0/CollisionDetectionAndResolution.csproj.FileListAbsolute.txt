@@ -1,0 +1,15 @@
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\bin\Debug\net8.0\CollisionDetectionAndResolution.exe
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\bin\Debug\net8.0\CollisionDetectionAndResolution.deps.json
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\bin\Debug\net8.0\CollisionDetectionAndResolution.runtimeconfig.json
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\bin\Debug\net8.0\CollisionDetectionAndResolution.dll
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\bin\Debug\net8.0\CollisionDetectionAndResolution.pdb
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.AssemblyInfoInputs.cache
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.AssemblyInfo.cs
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.csproj.CoreCompileInputs.cache
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.sourcelink.json
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.dll
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\refint\CollisionDetectionAndResolution.dll
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.pdb
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\CollisionDetectionAndResolution.genruntimeconfig.cache
+C:\Users\Lab Folders\Documents\GitHub\CollisionDetectionAndResolution\obj\Debug\net8.0\ref\CollisionDetectionAndResolution.dll
