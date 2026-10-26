@@ -25,7 +25,9 @@ namespace Vector3D_class
 
         public Vector3D(Vector3D v)
         {
-
+            x = v.x;
+            y = v.y;
+            z = v.z;
         }
 
         public Vector3D(float a, float b)
@@ -131,6 +133,14 @@ namespace Vector3D_class
                 first.getY() + second.getY(), first.getZ() + second.getZ());
             return sum;
         }
+        public static Vector3D operator +(Vector3D first, float scalar)
+        {
+            Vector3D sum = new Vector3D();
+
+            sum.SetRectGivenRect(first.getX() + scalar,
+                first.getY() + scalar, first.getZ() + scalar);
+            return sum;
+        }
 
         public static Vector3D operator -(Vector3D first, Vector3D second)
         {
@@ -219,7 +229,7 @@ namespace Vector3D_class
 
             Vector3D proj = ParallelProjection(d, P);
 
-            return Q - proj;
+            return P + proj;
         }
 
         public static Vector3D ClosestPointOnPlane(Vector3D Q,Vector3D P, Vector3D n)

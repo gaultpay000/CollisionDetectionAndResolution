@@ -1,8 +1,15 @@
 ﻿namespace CollisionDetectionAndResolution
 {
+    using System.Diagnostics;
     using Vector3D_class;
     internal class Program
     {
+        static bool detectedCollision = false;
+        static readonly float maxTime = 5f;
+        static readonly float deltaT = .02f;
+        static float elapsedTime = 0f;
+        static readonly Vector3D acceleration = new Vector3D();
+
         static void Main(string[] args)
         {
             Console.WriteLine("B for box/cube collision \nC for circle/Sphere collision \nL for line/plane collision");
@@ -29,14 +36,19 @@
                     float byExtent = TryToParse("box B Y extent");
                     float bzExtent = TryToParse("box B Z extent");
 
-                    Vector3D vi = new Vector3D(
-                        TryToParse("initial velocity X"),
-                        TryToParse("initial velocity Y"),
-                        TryToParse("initial velocity Z"));
+                    Vector3D vAi = new Vector3D(
+                        TryToParse("A initial velocity X"),
+                        TryToParse("A initial velocity Y"),
+                        TryToParse("A initial velocity Z"));
+
+                    Vector3D vBi = new Vector3D(
+                        TryToParse("B initial velocity X"),
+                        TryToParse("B initial velocity Y"),
+                        TryToParse("B initial velocity Z"));
 
                     AABB(boxA, axExtent, ayExtent, azExtent,
                          boxB, bxExtent, byExtent, bzExtent, 
-                         vi);
+                         vAi, vBi);
 
                     break;
                 case "C":
@@ -52,7 +64,16 @@
                         TryToParse("circleB Z initial position"));
                     float rB = TryToParse("circleB radius");
 
-                    CirclesAndSpheresCollision(xiA, rA, xiB, rB);
+                    Vector3D vA = new Vector3D(
+                        TryToParse("circleA X initial Velocity"),
+                        TryToParse("circleA Y initial Velocity"),
+                        TryToParse("circleA Z initial Velocity"));
+                    Vector3D vB = new Vector3D(
+                        TryToParse("circleB X initial Velocity"),
+                        TryToParse("circleB Y initial Velocity"),
+                        TryToParse("circleB Z initial Velocity"));
+
+                    CirclesAndSpheresCollision(xiA, rA, xiB, rB, vA, vB);
 
                     break;
                 case "L":
@@ -71,77 +92,126 @@
                         TryToParse("Y value of point on the line"),
                         TryToParse("Z value of point on the line"));
 
-                    LineCircleCollision(xi, r, P, d);
+                    Vector3D v = new Vector3D(
+                        TryToParse("X velocity of ball"),
+                        TryToParse("X velocity of ball"),
+                        TryToParse("X velocity of ball"));
+
+                    float epsilon = TryToParse("value of epsilon");
+
+                    LineCircleCollision(xi, r, P, d, v, epsilon);
 
                     break;
-
             }
         }
 
         public static void AABB(Vector3D boxA, float AXextent, float AYextent, float AZextent,
-            Vector3D boxB, float BXextent, float BYextent, float BZextent, Vector3D v)
+            Vector3D boxB, float BXextent, float BYextent, float BZextent, Vector3D vA, Vector3D vB)
         {
-            float Axmin = boxA.getX();
-            float Axmax = boxA.getX() + AXextent;
 
-            float Aymin = boxA.getY();
-            float Aymax = boxA.getY() + AYextent;
+            Vector3D posA = new Vector3D(boxA);
+            Vector3D vecA = new Vector3D(vA);
 
-            float Azmin = boxA.getZ();
-            float Azmax = boxA.getZ() + AZextent;
+            Vector3D posB = new Vector3D(boxB);
+            Vector3D vecB = new Vector3D(vB);
 
-
-            float Bxmin = boxB.getX();
-            float Bxmax = boxB.getX() + BXextent;
-
-            float Bymin = boxB.getY();
-            float Bymax = boxB.getY() + BYextent;
-
-            float Bzmin = boxB.getZ();
-            float Bzmax = boxB.getZ() + BZextent;
-
-            if(Axmin > Bxmax || Bxmin > Axmax)
+            while (!detectedCollision && elapsedTime < maxTime)
             {
-                //no collision
-            }
-            else if(Aymin > Bymax || Bymin > Aymax)
-            {
-                //no collision
-            }
-            else if(Azmin > Bzmax || Bzmin > Azmax && Azmax != Azmin || Bzmax != Bzmin)
-            {
-                //no collision 
-            }
-            else
-            {
-                // there was a collision
+                float Axmin = posA.getX();
+                float Axmax = posA.getX() + AXextent;
+
+                float Aymin = posA.getY();
+                float Aymax = posA.getY() + AYextent;
+
+                float Azmin = posA.getZ();
+                float Azmax = posA.getZ() + AZextent;
+
+
+                float Bxmin = posB.getX();
+                float Bxmax = posB.getX() + BXextent;
+
+                float Bymin = posB.getY();
+                float Bymax = posB.getY() + BYextent;
+
+                float Bzmin = posB.getZ();
+                float Bzmax = posB.getZ() + BZextent;
+
+                if (Axmin > Bxmax || Bxmin > Axmax)
+                {
+                    //no collision
+                }
+                else if (Aymin > Bymax || Bymin > Aymax)
+                {
+                    //no collision
+                }
+                else if (Azmin > Bzmax || Bzmin > Azmax && Azmax != Azmin || Bzmax != Bzmin)
+                {
+                    //no collision 
+                }
+                else
+                {
+                    detectedCollision = true;
+                    Console.WriteLine("Collision detected");
+                    return;
+                }
+
+                ForwardPropigation(posA, vecA, out posA, out vecA);
+                ForwardPropigation(posB, vecB, out posB, out vecB);
             }
         }
 
-        public static void CirclesAndSpheresCollision(Vector3D circleA, float rA, Vector3D circleB, float rB)
+        public static void CirclesAndSpheresCollision(Vector3D circleA, float rA, Vector3D circleB, float rB, Vector3D vA, Vector3D vB)
         {
-            float distance = Distance(circleA, circleB);
+            Vector3D posA = new Vector3D(circleA);
+            Vector3D vecA = new Vector3D(vA);
+
+            Vector3D posB = new Vector3D(circleB);
+            Vector3D vecB = new Vector3D(vB);
 
             float rSquared = (rA + rB) * (rA + rB);
 
-            if(distance > rSquared)
+            while (!detectedCollision && elapsedTime < maxTime)
             {
-                //no collision
-            }
-            else
-            {
-                //collision
+                float distance = Distance(posA, posB);
+
+                if (distance > rSquared)
+                {
+                    //no collision
+                }
+                else
+                {
+                    detectedCollision = true;
+                    Console.WriteLine("Collision detected");
+                    return;
+                }
+                ForwardPropigation(posA, vecA, out posA, out vecA);
+                ForwardPropigation(posB, vecB, out posB, out vecB);
             }
         }
 
-        public static void LineCircleCollision(Vector3D circlePos, float r, Vector3D P, Vector3D d)
+        public static void LineCircleCollision(Vector3D circlePos, float r, Vector3D P, Vector3D d, Vector3D v, float epsilon)
         {
+            Vector3D posA = new Vector3D(circlePos);
+            Vector3D vecA = new Vector3D(v);
 
+            while (!detectedCollision && elapsedTime < maxTime)
+            {
+                if(Vector3D.ClosestPointOnLine(circlePos, P, d).GetMagSq() <= r)
+                {
+                    detectedCollision = true;
+                    CollisionResolution(vecA, d, epsilon);
+                    Console.WriteLine("Collision Detected");
+                }
+
+                ForwardPropigation(posA, vecA, out posA, out vecA);
+            }
         }
 
-        public static void CollisionResolution()
+        public static void CollisionResolution(Vector3D vi, Vector3D n, float epsilon)
         {
+            float dotProduct = vi * (~n);
 
+            Vector3D vf = vi - (1 + epsilon) * dotProduct * n;
         }
 
         static float TryToParse(string message)
@@ -162,6 +232,18 @@
                           ((b.getY() - a.getY()) * (b.getY() - a.getY())) + 
                           ((b.getZ() - a.getZ()) * (b.getZ() - a.getZ()));
             return final;
+        }
+
+        static void ForwardPropigation(Vector3D r, Vector3D v, out Vector3D rf, out Vector3D vf)
+        {
+            rf = r + v * deltaT;// new poisition = old position + old velocity * change in time
+            vf = v + acceleration * deltaT; // new velocity = old velocity + acceleration * change in time
+
+            elapsedTime += deltaT;//tracks time
+
+            Console.WriteLine($"position {r.PrintRect()} m");
+            Console.WriteLine($"Velocity {v.PrintRect()} m/s");
+            Console.WriteLine();
         }
     }
 }
