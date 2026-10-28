@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CollisionDetectionAndResolution")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a735022abb87b6a46b9fdb48a13566f84dc8b55")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1a9036f9a6d2ab61833b74ce02b1ec6dd85713c")]
 [assembly: System.Reflection.AssemblyProductAttribute("CollisionDetectionAndResolution")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CollisionDetectionAndResolution")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -102,6 +102,33 @@
                     LineCircleCollision(xi, r, P, d, v, epsilon);
 
                     break;
+
+                case "P":
+                    Vector3D initialPos = new Vector3D(
+                        TryToParse("circle X initial position"),
+                        TryToParse("circle Y initial position"),
+                        TryToParse("circle Z initial position"));
+                    float radius = TryToParse("circle radius");
+
+                    Vector3D n = new Vector3D(
+                        TryToParse("amount line travels in the X"),
+                        TryToParse("amount line travels in the Y"),
+                        TryToParse("amount line travels in the Z"));
+                    Vector3D Point = new Vector3D(
+                        TryToParse("X value of point on the line"),
+                        TryToParse("Y value of point on the line"),
+                        TryToParse("Z value of point on the line"));
+
+                    Vector3D velocity = new Vector3D(
+                        TryToParse("X velocity of ball"),
+                        TryToParse("X velocity of ball"),
+                        TryToParse("X velocity of ball"));
+
+                    float e = TryToParse("value of epsilon");
+
+                    LineCircleCollision(initialPos, radius, Point, n, velocity, e);
+
+                    break;
             }
         }
 
@@ -199,8 +226,27 @@
                 if(Vector3D.ClosestPointOnLine(circlePos, P, d).GetMagSq() <= r)
                 {
                     detectedCollision = true;
-                    CollisionResolution(vecA, d, epsilon);
                     Console.WriteLine("Collision Detected");
+                    CollisionResolution(vecA, d, epsilon);
+                }
+
+                ForwardPropigation(posA, vecA, out posA, out vecA);
+            }
+        }
+
+        public static void PlaneSphereCollision(Vector3D circlePos, float r, Vector3D P, Vector3D n, Vector3D v, float epsilon)
+        {
+            Vector3D posA = new Vector3D(circlePos);
+            Vector3D vecA = new Vector3D(v);
+
+            while (!detectedCollision && elapsedTime < maxTime)
+            {
+                if (Vector3D.ClosestPointOnLine(circlePos, P, n).GetMagSq() <= r)
+                {
+                    detectedCollision = true;
+                    CollisionResolution(vecA, n, epsilon);
+                    Console.WriteLine("Collision Detected");
+                    CollisionResolution(vecA, n, epsilon);
                 }
 
                 ForwardPropigation(posA, vecA, out posA, out vecA);
@@ -212,6 +258,7 @@
             float dotProduct = vi * (~n);
 
             Vector3D vf = vi - (1 + epsilon) * dotProduct * n;
+            Console.WriteLine($"Velocity after collision: {vf.PrintRect()}");
         }
 
         static float TryToParse(string message)
